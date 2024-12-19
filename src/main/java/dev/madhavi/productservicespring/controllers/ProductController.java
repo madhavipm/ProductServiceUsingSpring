@@ -5,10 +5,7 @@ import dev.madhavi.productservicespring.models.Product;
 import dev.madhavi.productservicespring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,6 +25,19 @@ public class ProductController {
     @GetMapping("/")
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
+    }
+
+    public void deleteProduct(){
+
+    }
+    //Patch :http:// localhost:9090/products/15
+    @PatchMapping("/{id}")
+    public Product updateProduct(@PathVariable("id") long id ,@RequestBody Product product){
+        return productService.updateProduct(id, product);
+    }
+    @PutMapping("/{id}")
+    public Product replaceProduct(@PathVariable("id")  long id, @RequestBody Product product){
+        return productService.replaceProduct(id, product);
     }
 
 }

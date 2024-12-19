@@ -3,7 +3,10 @@ package dev.madhavi.productservicespring.services;
 import dev.madhavi.productservicespring.dtos.FakeStoreProductDto;
 import dev.madhavi.productservicespring.models.Category;
 import dev.madhavi.productservicespring.models.Product;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpMessageConverterExtractor;
+import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -49,6 +52,27 @@ public class FakeStoreProductService implements ProductService {
         product.setCategory(category);
         return product;
     }
+    //partial update
+    @Override
+    public Product updateProduct(long id, Product product) {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(Product, FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
+        FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products" + id ,
+                HttpMethod.PATCH, requestCallback, responseExtractor);
+        return convertFakeStoreProductDtoToProduct(response);
+    }
+    //put complete replace
+    @Override
+    public Product replaceProduct(long id, Product product) {
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(Product, FakeStoreProductDto.class);
+        HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
+        FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products" + id ,
+                HttpMethod.PATCH, requestCallback, responseExtractor);
+        return null;
+    }
 
+    @Override
+    public void deleteProduct(long id) {
+    }
 }
 
