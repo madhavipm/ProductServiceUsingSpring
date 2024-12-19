@@ -20,7 +20,7 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
+    //Calling fakestoreproductservice to fetch the product with given id
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable("id") long id){
         return productService.getSingleProduct(id);
