@@ -4,6 +4,8 @@ package dev.madhavi.productservicespring.controllers;
 import dev.madhavi.productservicespring.models.Product;
 import dev.madhavi.productservicespring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +21,21 @@ public class ProductController {
     }
     //Calling fakestoreproductservice to fetch the product with given id
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable("id") long id){
-        return productService.getSingleProduct(id);
+    public ResponseEntity<Product> getProductById(@PathVariable("id") long id){
+      ResponseEntity<Product> responseEntity = new ResponseEntity<>(
+                productService.getSingleProduct(id),
+                HttpStatus.OK);
+
+        return responseEntity;
+       /* ResponseEntity<Product> responseEntity = null;
+        try{
+            Product p = productService.getSingleProduct(id);
+            responseEntity = new ResponseEntity<>(p, HttpStatus.OK);
+        }
+        catch(RuntimeException e){
+            responseEntity = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return responseEntity;*/
     }
     @GetMapping("/")
     public List<Product> getAllProducts(){
@@ -39,5 +54,10 @@ public class ProductController {
     public Product replaceProduct(@PathVariable("id")  long id, @RequestBody Product product){
         return productService.replaceProduct(id, product);
     }
+    /*@ExceptionHandler(ArithmeticException.class)
+    public ResponseEntity<String> handleArithmeticException(Exception e) {
+        ResponseEntity<String> response = new ResponseEntity<>("Something went wrong.Coming from Product controller",
+                HttpStatus.INTERNAL_SERVER_ERROR);
 
+        return response;*/
 }

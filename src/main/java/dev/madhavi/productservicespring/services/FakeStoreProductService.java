@@ -1,5 +1,6 @@
 package dev.madhavi.productservicespring.services;
 
+import dev.madhavi.productservicespring.customexceptions.ProductNotFoundException;
 import dev.madhavi.productservicespring.dtos.FakeStoreProductDto;
 import dev.madhavi.productservicespring.models.Category;
 import dev.madhavi.productservicespring.models.Product;
@@ -22,11 +23,17 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public Product getSingleProduct(long productId) {
-        //call fakeStoreProductDto to fetch the product with given id == http call
+      //call fakeStoreProductDto to fetch the product with given id == http call
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
+        if(fakeStoreProductDto == null) {
+            throw new ProductNotFoundException("Product with id " + productId + "not found");
+        }
         //making a method call to convert fakeStoreProduct dto to PRODUCT
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+
+       // throw new ArithmeticException();
+
     }
     @Override
     public List<Product> getAllProducts() {
@@ -55,7 +62,7 @@ public class FakeStoreProductService implements ProductService {
     //partial update
     @Override
     public Product updateProduct(long id, Product product) {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(Product, FakeStoreProductDto.class);
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product, FakeStoreProductDto.class);
         HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
         FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products" + id ,
                 HttpMethod.PATCH, requestCallback, responseExtractor);
@@ -64,7 +71,7 @@ public class FakeStoreProductService implements ProductService {
     //put complete replace
     @Override
     public Product replaceProduct(long id, Product product) {
-        RequestCallback requestCallback = restTemplate.httpEntityCallback(Product, FakeStoreProductDto.class);
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(product, FakeStoreProductDto.class);
         HttpMessageConverterExtractor<FakeStoreProductDto> responseExtractor = new HttpMessageConverterExtractor(FakeStoreProductDto.class, restTemplate.getMessageConverters());
         FakeStoreProductDto response = restTemplate.execute("https://fakestoreapi.com/products" + id ,
                 HttpMethod.PATCH, requestCallback, responseExtractor);
