@@ -1,8 +1,15 @@
 package dev.madhavi.productservicespring.models;
 
-import java.util.Date;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
+import java.util.Date;
+@MappedSuperclass//no obj is created for base model
 public class BaseModel {
+    @Id//primary key
+    @GeneratedValue(strategy = GenerationType.AUTO)//Auto increment
     private long id;
     private Date createdAt;
     private Date updatedAt;
