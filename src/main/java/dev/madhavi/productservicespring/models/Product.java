@@ -2,10 +2,8 @@ package dev.madhavi.productservicespring.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 @Entity
-@Table
 public class Product extends BaseModel {
     private String title;
     private double price;
