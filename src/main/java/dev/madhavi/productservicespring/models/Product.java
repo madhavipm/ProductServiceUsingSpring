@@ -1,13 +1,13 @@
 package dev.madhavi.productservicespring.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-
 @Entity
 public class Product extends BaseModel {
     private String title;
     private double price;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
 
     public String getTitle() {
