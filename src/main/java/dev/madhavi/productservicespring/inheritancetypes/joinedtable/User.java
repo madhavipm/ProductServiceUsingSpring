@@ -1,18 +1,21 @@
 package dev.madhavi.productservicespring.inheritancetypes.joinedtable;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Entity(name = "jt_users")
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name = "jt_users")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
     private String email;
