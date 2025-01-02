@@ -38,6 +38,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     //public ResponseEntity<Exceptiondto>
     // handleProductNotFoundException(Exception e) won't work bcz
+    //Exception e is altogether obj for all default exceptions for custom exception we need to create custom obj
     // in exception handler i mention custom exception so i need to send that customexception only
     public ResponseEntity<Exceptiondto> handleProductNotFoundException(ProductNotFoundException ex) {
         Exceptiondto dto = new Exceptiondto();
