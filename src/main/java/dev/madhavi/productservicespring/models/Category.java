@@ -1,7 +1,7 @@
 package dev.madhavi.productservicespring.models;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+
 
 @Entity
 public class Category extends BaseModel{

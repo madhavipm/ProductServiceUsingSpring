@@ -24,13 +24,13 @@ public class GlobalExceptionHandler {
     }
     @ExceptionHandler(ArrayIndexOutOfBoundsException.class)
     public ResponseEntity<String> handleArrayOutOfBoundsException(Exception e) {
-        ResponseEntity<String> response = new ResponseEntity<>("Something went wrong.Coming from controller Advice ",
+        ResponseEntity<String> response = new ResponseEntity<>("Something went wrong.Coming from controller Advice1 ",
                 HttpStatus.NOT_FOUND);
 
         return response;
     }@ExceptionHandler(NullPointerException.class)
     public ResponseEntity<String> handleNullPointerException(Exception e) {
-        ResponseEntity<String> response = new ResponseEntity<>("Something went wrong.Coming from controller Advice ",
+        ResponseEntity<String> response = new ResponseEntity<>("Something went wrong.Coming from controller Advice2 ",
                 HttpStatus.FORBIDDEN);
 
         return response;

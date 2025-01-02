@@ -3,6 +3,7 @@ package dev.madhavi.productservicespring.models;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
+
 @Entity
 public class Product extends BaseModel {
     private String title;
