@@ -3,6 +3,7 @@ package dev.madhavi.productservicespring.services;
 import dev.madhavi.productservicespring.customexceptions.ProductNotFoundException;
 import dev.madhavi.productservicespring.models.Category;
 import dev.madhavi.productservicespring.models.Product;
+import dev.madhavi.productservicespring.repositories.CategoryRepository;
 import dev.madhavi.productservicespring.repositories.ProductRepository;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,11 @@ import java.util.Optional;
 @Setter
 
 public class SelfProductService implements ProductService{
+    private CategoryRepository categoryRepository;
     private ProductRepository productRepository;
-    public SelfProductService(ProductRepository productRepository) {
+    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
     }
     @Override
     public Product getSingleProduct(Long id) throws ProductNotFoundException {
@@ -37,13 +40,37 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
+    //patch
+    public Product updateProduct(Long id, Product product) throws ProductNotFoundException {
+    Optional<Product>  optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()){
+            throw new ProductNotFoundException("product with id " + id + " does not exist");
+        }
+        Product productInDB = optionalProduct.get();
+        if(product.getTitle() != null){
+            productInDB.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            productInDB.setPrice(product.getPrice());
+        }
+        return productRepository.save(productInDB);
     }
-
+    //put
     @Override
     public Product replaceProduct(Long id, Product product) {
-        return null;
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        if(optionalProduct.isEmpty()){
+            product.setId(id);
+           productRepository.save(product);
+        }
+        Product productInDB = optionalProduct.get();
+        if(product.getTitle() != null){
+            productInDB.setTitle(product.getTitle());
+        }
+        if(product.getPrice() != null){
+            productInDB.setPrice(product.getPrice());
+        }
+        return productRepository.save(productInDB);
     }
 
     @Override
@@ -56,6 +83,10 @@ public class SelfProductService implements ProductService{
     public Product addNewProduct(Product product) {
         Category category = product.getCategory();
         if(category != null){
+            if(category.getId() == null){
+                //save the new category
+                category = categoryRepository.save(category);
+            }
             product.setCategory(category);
         }
         return productRepository.save(product);

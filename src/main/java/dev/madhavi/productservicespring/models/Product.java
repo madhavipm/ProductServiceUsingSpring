@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 @Entity
 public class Product extends BaseModel {
     private String title;
-    private double price;
+    private Double price;
     @ManyToOne(cascade = CascadeType.PERSIST)
     private Category category;
 
@@ -19,11 +19,11 @@ public class Product extends BaseModel {
         this.title = title;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 

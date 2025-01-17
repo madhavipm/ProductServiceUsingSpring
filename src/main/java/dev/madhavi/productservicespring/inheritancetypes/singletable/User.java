@@ -15,11 +15,11 @@ import lombok.Setter;
 @DiscriminatorValue(value = "0")
 public class User {
     @Id
-    private long id;
+    private Long id;
     private String username;
     private String email;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

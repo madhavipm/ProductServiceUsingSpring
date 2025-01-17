@@ -1,9 +1,9 @@
 package dev.madhavi.productservicespring.dtos;
 
 public class FakeStoreProductDto {
-    private long id;
+    private Long id;
     private String title;
-    private double price;
+    private Double price;
     private String category;
     private String image;
 
@@ -15,11 +15,11 @@ public class FakeStoreProductDto {
         this.image = image;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -31,11 +31,11 @@ public class FakeStoreProductDto {
         this.title = title;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
