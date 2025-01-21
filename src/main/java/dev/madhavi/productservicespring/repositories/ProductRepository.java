@@ -1,7 +1,10 @@
 package dev.madhavi.productservicespring.repositories;
 
 import dev.madhavi.productservicespring.models.Product;
+import dev.madhavi.productservicespring.projections.ProductWithIdAndTitle;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,6 +32,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByTitleOrderById(String title);
 
     void deleteById(Long id);
+    @Query("select p.id, p.title from Product p where p.id = :x" )
+    ProductWithIdAndTitle randomHqlMethod(@Param("x") Long x);
 }
 
 
