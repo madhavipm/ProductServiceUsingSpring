@@ -2,6 +2,8 @@ package dev.madhavi.productservicespring.repositories;
 
 import dev.madhavi.productservicespring.models.Product;
 import dev.madhavi.productservicespring.projections.ProductWithIdAndTitle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,6 +36,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     void deleteById(Long id);
     @Query("select p.id, p.title from Product p where p.id = :x" )
     ProductWithIdAndTitle randomHqlMethod(@Param("x") Long x);
+
+    Page<Product> findAll(Pageable pageable);
 }
 
 

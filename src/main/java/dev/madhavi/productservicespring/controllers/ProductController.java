@@ -6,6 +6,7 @@ import dev.madhavi.productservicespring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -35,8 +36,8 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<Product> getAllProducts(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {
+        return productService.getAllProducts(pageNumber, pageSize);
     }
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable("id") Long id) {
