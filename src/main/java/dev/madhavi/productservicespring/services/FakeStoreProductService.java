@@ -6,6 +6,7 @@ import dev.madhavi.productservicespring.models.Category;
 import dev.madhavi.productservicespring.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
@@ -18,12 +19,20 @@ import java.util.List;
 
 public class FakeStoreProductService implements ProductService {
     private RestTemplate restTemplate;
-    FakeStoreProductService (RestTemplate restTemplate) {
+    private RedisTemplate<String , Object> redisTemplate;
+    FakeStoreProductService (RestTemplate restTemplate , RedisTemplate<String , Object> redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
-
     @Override
     public Product getSingleProduct(Long productId) {
+    //Trying to fetch the product from redis and also return type is object not product
+        Product product  = (Product) redisTemplate.opsForHash().get("PRODUCTS" , "PRODUCT_" + productId);
+
+        if(product != null){
+            //cache hit
+            return product;
+        }
       //call fakeStoreProductDto to fetch the product with given id == http call
         FakeStoreProductDto fakeStoreProductDto = restTemplate.getForObject("https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class);
@@ -31,6 +40,12 @@ public class FakeStoreProductService implements ProductService {
             throw new ProductNotFoundException("Product with id " + productId + "not found");
         }
         making a method call to convert fakeStoreProduct dto to PRODUCT*/
+        //cache miss
+        //convert fakestoreproduct to product and store the product in redis then return
+
+        product = convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+        redisTemplate.opsForHash().put("PRODUCTS" , "PRODUCT_" + productId,product);
+
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
 
        // throw new ArithmeticException();
