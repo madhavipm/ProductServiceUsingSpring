@@ -1,6 +1,8 @@
 package dev.madhavi.productservicespring.controllers;
 
 
+import dev.madhavi.productservicespring.AuthCommons.AuthenticationCommons;
+import dev.madhavi.productservicespring.dtos.UserDto;
 import dev.madhavi.productservicespring.models.Product;
 import dev.madhavi.productservicespring.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +21,25 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
     private ProductService productService;
+    private AuthenticationCommons authenticationCommons;
 
-    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService) {
+    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService, AuthenticationCommons authenticationCommons) {
         this.productService = productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
     //Calling fakestoreproductservice to fetch the product with given id
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id) {
-        ResponseEntity<Product> responseEntity = new ResponseEntity<>(
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id , @RequestHeader String authenticationToken) {
+        //Inorder to make this servcice authenticated  we can pass token in the
+        //input parameter and then we'll have to validate the token from user
+        UserDto userDto = authenticationCommons.validateToken(authenticationToken);
+        ResponseEntity<Product> responseEntity = null;
+        if(userDto == null){
+            return new ResponseEntity<>(null ,HttpStatus.UNAUTHORIZED);
+        }
+
+        responseEntity = new ResponseEntity<>(
                 productService.getSingleProduct(id),
                 HttpStatus.OK);
 
