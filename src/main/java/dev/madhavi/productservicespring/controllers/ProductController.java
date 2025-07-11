@@ -29,12 +29,31 @@ public class ProductController {
     }
 
     //Calling fakestoreproductservice to fetch the product with given id
+    //For Calling Userservice via product service
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id , @RequestHeader String authenticationToken) {
+    public ResponseEntity<Product> getProductById(@PathVariable Long id,
+                                                  @RequestHeader("Authorization") String token) {
+        try {
+            System.out.println("Received token: " + token);
+
+            UserDto user = authenticationCommons.validateToken(token);
+
+            System.out.println("Token is valid for user: " + user.getEmail());
+
+            Product product = productService.getSingleProduct(id);
+            return ResponseEntity.ok(product);
+
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // 🛑 Unauthorized
+        }
+    }
+
+    /*@GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable("id") Long id , @RequestHeader String token) {
         //Inorder to make this servcice authenticated  we can pass token in the
         //input parameter and then we'll have to validate the token from user
-        UserDto userDto = authenticationCommons.validateToken(authenticationToken);
-        ResponseEntity<Product> responseEntity = null;
+        UserDto userDto = authenticationCommons.validateToken(token);
+       ResponseEntity<Product> responseEntity = null;
         if(userDto == null){
             return new ResponseEntity<>(null ,HttpStatus.UNAUTHORIZED);
         }
@@ -45,7 +64,7 @@ public class ProductController {
 
         return responseEntity;
 
-    }
+    }*/
 
     @GetMapping("/")
     public Page<Product> getAllProducts(@RequestParam("pageNumber") int pageNumber, @RequestParam("pageSize") int pageSize) {

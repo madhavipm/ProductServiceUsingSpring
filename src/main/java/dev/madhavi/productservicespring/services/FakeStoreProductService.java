@@ -28,6 +28,7 @@ public class FakeStoreProductService implements ProductService {
     public Product getSingleProduct(Long productId) {
     //Trying to fetch the product from redis and also return type is object not product
         Product product  = (Product) redisTemplate.opsForHash().get("PRODUCTS" , "PRODUCT_" + productId);
+        System.out.println("Fetching product with id: " + productId);
 
         if(product != null){
             //cache hit
